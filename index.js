@@ -1,6 +1,10 @@
 const serverless = require("serverless-http");
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 let groceryList = [
   { id: 1, name: "apples", description: 3 },
@@ -22,6 +26,8 @@ app.get("/", (req, res, next) => {
 
 // * GREATE A NEW ITEM
 app.post("/", (req, res, next) => {
+  console.log("Got body:", req.body);
+
   if (!req.body.name || !req.body.description) {
     return res.status(400).json({
       error: "You must include a name and description",
@@ -44,7 +50,14 @@ app.post("/", (req, res, next) => {
 
 // * UPDATE AN ITEM
 app.put("/:id", (req, res, next) => {
-  console.log(req.params.id);
+  let updatedItem = {
+    id: req.params.id,
+    name: req.body.name,
+    description: req.body.description,
+  };
+
+  groceryList.push(myNewItem);
+
   return res.status(200).json({
     message: `You updated an item with an id of ${req.params.id}`,
     data: groceryList,
