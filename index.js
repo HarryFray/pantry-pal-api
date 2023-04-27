@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // * GET ALL ITEMS
-app.get("/", (req, res, next) => {
+app.get("/food", (req, res, next) => {
   FoodModel.find({}).then((data) => {
     return res.status(200).json({
       message: "You got all items",
@@ -18,7 +18,7 @@ app.get("/", (req, res, next) => {
 });
 
 // * GREATE A NEW ITEM
-app.post("/", (req, res, next) => {
+app.post("/food", (req, res, next) => {
   let newItem = {
     name: req.body.name,
     description: req.body.description,
@@ -39,7 +39,7 @@ app.post("/", (req, res, next) => {
 });
 
 // * UPDATE AN ITEM
-app.put("/:id", (req, res, next) => {
+app.put("/food/:id", (req, res, next) => {
   let updatedItem = {
     name: req.body.name,
     description: req.body.description,
@@ -56,7 +56,7 @@ app.put("/:id", (req, res, next) => {
 });
 
 // * DELETE AN ITEM
-app.delete("/:id", (req, res, next) => {
+app.delete("/food/:id", (req, res, next) => {
   FoodModel.findByIdAndDelete(req.params.id).then((data) => {
     return res.status(200).json({
       message: "You deleted an item",
