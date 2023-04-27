@@ -3,85 +3,97 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
+// TODO: Connect to MongoDB IN ANOTHER FILE
+const mongoose = require("mongoose");
+
+const connectDB = async () => {
+  console.log("Connecting to MongoDB...");
+  try {
+    await mongoose.connect("mongodb://localhost:27017");
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+};
+
+connectDB().then(() => {
+  console.log("Connected to MongoDB");
+});
+
+const food = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    default: "No Name",
+  },
+  description: {
+    type: String,
+    required: true,
+    default: "No Description",
+  },
+});
+
+const Food = mongoose.model("food", food);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-let groceryList = [
-  { id: 1, name: "apples", description: 3 },
-  { id: 2, name: "bananas", description: 2 },
-  { id: 3, name: "bread", description: 1 },
-  { id: 4, name: "eggs", description: 1 },
-  { id: 5, name: "milk", description: 2 },
-  { id: 6, name: "chicken", description: 2 },
-  { id: 7, name: "rice", description: 1 },
-];
-
 // * GET ALL ITEMS
 app.get("/", (req, res, next) => {
-  return res.status(200).json({
-    message: "You got all items",
-    data: groceryList,
+  Food.find({}).then((data) => {
+    return res.status(200).json({
+      message: "You got all items",
+      data: data,
+    });
   });
 });
 
 // * GREATE A NEW ITEM
 app.post("/", (req, res, next) => {
-  console.log("Got body:", req.body);
-
-  if (!req.body.name || !req.body.description) {
-    return res.status(400).json({
-      error: "You must include a name and description",
-    });
-  }
-
-  let myNewItem = {
-    id: groceryList.length + 1,
+  let newItem = {
     name: req.body.name,
     description: req.body.description,
   };
 
-  groceryList.push(myNewItem);
-
-  return res.status(200).json({
-    message: "You created a new item",
-    data: groceryList,
+  Food.create(newItem).then((data) => {
+    return res.status(200).json({
+      message: "You created a new item",
+      data: data,
+    });
   });
 });
 
 // * UPDATE AN ITEM
 app.put("/:id", (req, res, next) => {
   let updatedItem = {
-    id: req.params.id,
     name: req.body.name,
     description: req.body.description,
   };
 
-  groceryList.push(myNewItem);
-
-  return res.status(200).json({
-    message: `You updated an item with an id of ${req.params.id}`,
-    data: groceryList,
-  });
+  Food.findByIdAndUpdate(req.params.id, updatedItem, { new: true }).then(
+    (data) => {
+      return res.status(200).json({
+        message: "You updated an item",
+        data: data,
+      });
+    }
+  );
 });
 
 // * DELETE AN ITEM
 app.delete("/:id", (req, res, next) => {
-  let newItemsList = groceryList.filter((item) => {
-    return item.id != req.params.id;
-  });
-
-  groceryList = newItemsList;
-
-  return res.status(200).json({
-    message: `You deleted an item with an id of ${req.params.id}`,
-    data: groceryList,
+  Food.findByIdAndDelete(req.params.id).then((data) => {
+    return res.status(200).json({
+      message: "You deleted an item",
+      data: data,
+    });
   });
 });
 
 // * ERROR HANDLING
 app.use((req, res, next) => {
   return res.status(404).json({
-    error: "Not Foundrr",
+    error: "Not Found",
   });
 });
 
