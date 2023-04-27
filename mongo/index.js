@@ -31,14 +31,12 @@ const user = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  favoriteFoods: [
-    {
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "food",
-      },
+  favoriteFood: {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "food",
     },
-  ],
+  },
 });
 
 const FoodModel = mongoose.model("food", food);
