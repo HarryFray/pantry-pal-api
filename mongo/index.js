@@ -25,6 +25,23 @@ const food = new mongoose.Schema({
   },
 });
 
-const FoodModel = mongoose.model("food", food);
+const user = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  favoriteFoods: [
+    {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "food",
+      },
+    },
+  ],
+});
 
-module.exports = { FoodModel };
+const FoodModel = mongoose.model("food", food);
+const UserModel = mongoose.model("user", user);
+
+module.exports = { FoodModel, UserModel };

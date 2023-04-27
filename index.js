@@ -2,7 +2,7 @@ const serverless = require("serverless-http");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const { FoodModel } = require("./mongo");
+const { FoodModel, UserModel } = require("./mongo");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
