@@ -25,6 +25,7 @@ const food = new mongoose.Schema({
   },
 });
 
+
 const user = new mongoose.Schema({
   name: {
     type: String,
@@ -34,12 +35,13 @@ const user = new mongoose.Schema({
   favoriteFood: {
     _id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "food",
+      required: true,
+      ref: "Food",
     },
   },
 });
 
-const FoodModel = mongoose.model("food", food);
-const UserModel = mongoose.model("user", user);
+const User = mongoose.model("User", user);
+const Food = mongoose.model("Food", food);
 
-module.exports = { FoodModel, UserModel };
+module.exports = { Food, User };
