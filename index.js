@@ -70,7 +70,7 @@ app.post("/user", async (req, res, next) => {
   try {
     const result = await User.create({
       name: req.body.name,
-      favoriteFood: req.body.favoriteFood,
+      favoritefood: req.body.favoritefood,
     });
     return res.status(200).json({
       message: "You created a new user",
@@ -87,12 +87,27 @@ app.post("/user", async (req, res, next) => {
 app.get("/user/:id", async (req, res) => {
   try {
     const result = await User.findById(req.params.id)
-      // TODO: Populate is not behaving as expected...
-      .populate("favoriteFood")
+      .populate("favoritefood")
       .exec();
 
     return res.status(200).json({
       message: "Get a single user with favorite food",
+      data: result,
+    });
+  } catch (err) {
+    return res.status(400).json({
+      message: err,
+    });
+  }
+});
+
+// * GET ALL USERS WITH FAVORITE FOOD
+app.get("/user", async (req, res) => {
+  try {
+    const result = await User.find({}).populate("favoritefood").exec();
+
+    return res.status(200).json({
+      message: "Get all users with favorite food",
       data: result,
     });
   } catch (err) {

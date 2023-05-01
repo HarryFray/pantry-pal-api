@@ -32,12 +32,10 @@ const user = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  favoriteFood: {
-    _id: {
+  favoritefood: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: "Food",
-    },
+      required: true
   },
 });
 
