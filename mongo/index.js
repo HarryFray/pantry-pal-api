@@ -3,9 +3,7 @@ const mongoose = require("mongoose");
 const connectDB = async () => {
   console.log("Connecting to MongoDB...");
 
-  const DB_URL =
-    "mongodb+srv://pantry-pal:w2kzjuY8jiprrM8e@cluster0.f77uaiq.mongodb.net/?retryWrites=true&w=majority";
-
+  const DB_URL = null;
   try {
     if (DB_URL) {
       console.log("Connected to DEV MongoDB");
