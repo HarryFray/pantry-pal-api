@@ -2,8 +2,18 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   console.log("Connecting to MongoDB...");
+
+  const DB_URL =
+    "mongodb+srv://pantry-pal:w2kzjuY8jiprrM8e@cluster0.f77uaiq.mongodb.net/?retryWrites=true&w=majority";
+
   try {
-    await mongoose.connect("mongodb://localhost:27017");
+    if (DB_URL) {
+      console.log("Connected to DEV MongoDB");
+      await mongoose.connect(DB_URL);
+    } else {
+      console.log("Connected to LOCAL MongoDB");
+      await mongoose.connect("mongodb://localhost:27017");
+    }
   } catch (err) {
     console.error(err.message);
     process.exit(1);
@@ -25,7 +35,6 @@ const food = new mongoose.Schema({
   },
 });
 
-
 const user = new mongoose.Schema({
   name: {
     type: String,
@@ -33,9 +42,9 @@ const user = new mongoose.Schema({
     unique: true,
   },
   favoritefood: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Food",
-      required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Food",
+    required: true,
   },
 });
 
